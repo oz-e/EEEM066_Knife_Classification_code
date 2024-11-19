@@ -52,8 +52,10 @@ def train(train_loader, model, criterion, optimizer, scaler, scheduler, epoch, v
     return [losses.avg]
 
 def evaluate(val_loader, model, criterion, epoch, train_loss, start, log):
-    model.eval()
     map = AverageMeter()
+    vAcc5 = AverageMeter()
+    vAcc1 = AverageMeter()
+    model.eval()
     with torch.no_grad():
         for i, (images, target, fnames) in enumerate(val_loader):
             images = images.cuda(non_blocking=True)
@@ -65,11 +67,13 @@ def evaluate(val_loader, model, criterion, epoch, train_loss, start, log):
             
             valid_map5, valid_acc1, valid_acc5 = map_accuracy(preds, target)
             map.update(valid_map5, images.size(0))
+            vAcc1.update(valid_acc1, images.size(0))
+            vAcc5.update(valid_acc5, images.size(0))
             # message = f'\rval  {i:5.1f} | {epoch:6.1f} | {train_loss[0]:.3f} | {map.avg:.3f} | {time_to_str(timer() - start, "min")}'
-            message_val = format_log_message("val", i, epoch, train_loss[0], map.avg, time_to_str(timer() - start, "sec"))
+            message_val = format_log_message("val", i, epoch, train_loss[0], map.avg, time_to_str(timer() - start, "sec"), vAcc1.avg, vAcc5.avg)
             print(f'\r{message_val}', end='', flush=True)
         
-        message_val_epoch = format_log_message("val", i, epoch, train_loss[0], map.avg, time_to_str(timer() - start, "sec"))
+        message_val_epoch = format_log_message("val", i, epoch, train_loss[0], map.avg, time_to_str(timer() - start, "sec"), vAcc1.avg, vAcc5.avg)
         log.write("\n")  
         log.write(message_val_epoch)
     
@@ -119,7 +123,7 @@ def main():
 
     log.write("\n" + "-" * 25 + f" [START {timestamp}] " + "-" * 25 + "\n\n")
     log.write('                           |  Train   |   Valid  |              |\n')
-    log.write(' | Mode  |  Iter  | Epoch  |   Loss   |    mAP   |     Time     |\n')
+    log.write(' | Mode  |  Iter  | Epoch  |   Loss   |    mAP   |     Time     |   Acc@1  |   Acc@5  |\n')
     log.write('-' * 79 + '\n')
 
     # Execution control

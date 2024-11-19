@@ -1,9 +1,9 @@
 #!/bin/bash
 
-STUDENT_ID=xxxxxxx STUDENT_NAME="xxxxxx" python main.py \
+STUDENT_ID=6687869 STUDENT_NAME="Omojevwe Zion Ejechi" python main.py \
 --model_mode tf_efficientnet_b0 \
 --learning_rate 0.00005 \
---dataset_location /scratch/EEEM066_Knife_Classification_dataset \
+--dataset_location ../EEEM066_Knife_Classification_dataset \
 --test_datacsv dataset/test.csv \
 --seed 42 \
 --batch_size 16 \
