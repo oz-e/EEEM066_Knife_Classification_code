@@ -1,6 +1,6 @@
 #!/bin/bash
 
-STUDENT_ID=6687869 STUDENT_NAME="Omojevwe Zion Ejechi" python main.py \
+STUDENT_ID=0000000 STUDENT_NAME="" python main.py \
 --model_mode tf_efficientnet_b0 \
 --learning_rate 0.00005 \
 --dataset_location ../EEEM066_Knife_Classification_dataset \
