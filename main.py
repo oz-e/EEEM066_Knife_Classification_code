@@ -12,6 +12,7 @@ from torch.utils.data import DataLoader
 import timm
 from sklearn.model_selection import train_test_split
 import uuid
+import wandb
 
 from src.lr_schedulers import init_lr_scheduler
 from src.optimizers import init_optimizer
@@ -76,10 +77,22 @@ def evaluate(val_loader, model, criterion, epoch, train_loss, start, log):
         message_val_epoch = format_log_message("val", i, epoch, train_loss[0], map.avg, time_to_str(timer() - start, "sec"), vAcc1.avg, vAcc5.avg)
         log.write("\n")  
         log.write(message_val_epoch)
+
+        wandb.log({"valid_1_acc": vAcc1.avg, "valid_5_acc": vAcc5.avg, "mAP": map.avg})
     
     return [map.avg]
 
 def main():
+
+    # start a new wandb run to track this script
+    wandb.init(
+        # set the wandb project where this run will be logged
+        project="eeem066-cw",
+
+        # track hyperparameters and run metadata
+        config=args
+    )
+
     # Set the seed for reproducibility
     seed_value = args.seed
     set_seed(seed_value)
@@ -150,6 +163,7 @@ def main():
                 os.mkdir(args.saved_checkpoint_path)
             save_path = os.path.join(args.saved_checkpoint_path, filename)
             torch.save(model.state_dict(), save_path)
+    wandb.finish()
 
 if __name__ == "__main__":
     main()
