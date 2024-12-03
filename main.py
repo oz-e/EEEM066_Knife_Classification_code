@@ -165,6 +165,7 @@ def main():
                 os.mkdir(args.saved_checkpoint_path)
             save_path = os.path.join(args.saved_checkpoint_path, filename)
             torch.save(model.state_dict(), save_path)
+            wandb.save(save_path)
     wandb.finish()
 
 if __name__ == "__main__":
