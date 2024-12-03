@@ -71,10 +71,12 @@ def evaluate(val_loader, model, criterion, epoch, train_loss, start, log):
             vAcc1.update(valid_acc1, images.size(0))
             vAcc5.update(valid_acc5, images.size(0))
             # message = f'\rval  {i:5.1f} | {epoch:6.1f} | {train_loss[0]:.3f} | {map.avg:.3f} | {time_to_str(timer() - start, "min")}'
-            message_val = format_log_message("val", i, epoch, train_loss[0], map.avg, time_to_str(timer() - start, "sec"), vAcc1.avg, vAcc5.avg)
+            # message_val = format_log_message("val", i, epoch, train_loss[0], map.avg, time_to_str(timer() - start, "sec"), vAcc1.avg, vAcc5.avg)
+            message_val = format_log_message("val", i, epoch, train_loss[0], map.avg, time_to_str(timer() - start, "sec"))
             print(f'\r{message_val}', end='', flush=True)
         
-        message_val_epoch = format_log_message("val", i, epoch, train_loss[0], map.avg, time_to_str(timer() - start, "sec"), vAcc1.avg, vAcc5.avg)
+        # message_val_epoch = format_log_message("val", i, epoch, train_loss[0], map.avg, time_to_str(timer() - start, "sec"), vAcc1.avg, vAcc5.avg)
+        message_val_epoch = format_log_message("val", i, epoch, train_loss[0], map.avg, time_to_str(timer() - start, "sec"))
         log.write("\n")  
         log.write(message_val_epoch)
 
